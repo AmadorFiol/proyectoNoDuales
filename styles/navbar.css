@@ -7,14 +7,14 @@
 body {
     font-family: 'Poppins', sans-serif;
     background-color: white;
-    color: black;
+    color: navy;
 }
 
 nav {
     background: navy;
     padding: 15px 0;
     text-align: center;
-    box-shadow: 0 4px 10px black;
+    box-shadow: 0 4px 10px navy;
 }
 
 .menu {
@@ -40,7 +40,7 @@ nav {
 
 .menu a:hover {
     color: white;
-    text-shadow: 0 0 10px black;
+    text-shadow: 0 0 10px navy;
     transform: scale(1.05);
 }
 
@@ -98,4 +98,34 @@ nav {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 25px;
+    padding: 5px 10px;
+    
+    width: 300px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.search-container input {
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 8px 30px 8px 40px;
+    border-radius: 25px;
+}
+
+.search-container input::placeholder {
+    color: #aaa;
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    color: #888;
 }
