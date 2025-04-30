@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background: navy;
+  }
+
+  .menu-ordenar {
+    margin-bottom: 20px;
+    background: white;
+  }
+
+  .menu-ordenar a {
+    margin-right: 15px;
+    text-decoration: none;
+    color: navy;
+    font-weight: bold;
+  }
+
+  .productos {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .productos th, .productos td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid white;
+  }
+
+  .productos th {
+    background-color: navy;
+    color: white;
+    font-size: 18px;
+  }
+
+  .productos tr:hover {
+    background-color: white;
+  }

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>Usuario | Electromarkt</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+  <header class="usuario-header">
+    {% if session.get('usuario') %}
+      <p class="usuario-nombre">Bienvenido, {{ session['usuario'] }}</p>
+      <form action="{{ url_for('logout') }}" method="post">
+        <button type="submit" class="boton-sesion">Sign off</button>
+      </form>
+    {% else %}
+      <a href="{{ url_for('login') }}" class="boton-sesion">Sign in</a>
+    {% endif %}
+  </header>
+
+  <main>
+    <h1>Contenido de la página</h1>
+    <!-- Aquí iría el contenido del usuario -->
+  </main>
+
+</body>

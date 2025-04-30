@@ -2,7 +2,7 @@
 <head>
     <title>Electromarkt</title>
     <link rel="stylesheet" href="../styles/navbar.css">
-    <link rel="stylesheet" href="../styles/styles_01.css">
+    <link rel="stylesheet" href="../styles/index.css">
 </head>
 <body>
     <nav>
@@ -14,13 +14,12 @@
                 <ul class="submenu">
                     <li><a href="#">Laptops</a></li>
                     <li><a href="#">Tablets</a></li>
-                    <li><a href="#">Gaming</a></li>
+                    <li><a href="#">Ordenadores</a></li>
                     <li><a href="#">Software</a></li>
                     <li><a href="#">Monitores</a></li>
                     <li><a href="#">Componentes</a></li>
                 </ul>
             </li>
-            <li><a href="#">Mi tienda</a></li>
             <div class="search-container">
                 <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M10 2a8 8 0 015.29 13.71l4.48 4.48-1.42 1.42-4.48-4.48A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z" />
@@ -29,15 +28,25 @@
             </div>
             <div class="navbar-icons">
                 <button class="icon-button">
-                  <img src="../img/white/carrito.png" width="50%" height="50%">
+                  <a href="carrito.html"><img src="../img/white/carrito.png" width="50%" height="50%"></a>
                 </button>
                 <button class="icon-button">
-                  <img src="../img/white/userIcon.png" width="50%" height="50%">
+                  <a href="singup.html"><img src="../img/white/userIcon.png" width="50%" height="50%"></a>
                 </button>
               </div>
-              
-        </ul>
-           
+        </ul>    
     </nav>
+    <div class="menu-ordenar">
+      <form method="get" action="{{ url_for('/') }}">
+        <label for="ordenar">Ordenar por:</label>
+        <select name="ordenar" id="ordenar" onchange="this.form.submit()">
+          <option value="precio-desc" {% if request.args.get('ordenar') == 'precio-desc' %}selected{% endif %}>Precio: mayor a menor</option>
+          <option value="precio-asc" {% if request.args.get('ordenar') == 'precio-asc' %}selected{% endif %}>Precio: menor a mayor</option>
+          <option value="nombre-az" {% if request.args.get('ordenar') == 'nombre-az' %}selected{% endif %}>Nombre: A-Z</option>
+        </select>
+      </form>
+    </div>
+    
+      
     
 </body>

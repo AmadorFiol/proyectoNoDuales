@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Carrito | Electromarkt</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
+</head>
+<body>
+    <div class="cart-container">
+        <div class="cart-items">
+            {% for item in cart_items %}
+            <div class="cart-item">
+                <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                <div class="item-details">
+                    <h2>{{ item.name }}</h2>
+                    <p>{{ item.description }}</p>
+                    <span class="price">{{ item.price }} €</span>
+                    <div class="quantity-control">
+                        <form action="{{ url_for('update_quantity', item_id=item.id) }}" method="POST">
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1">
+                            <button type="submit">Actualizar</button>
+                        </form>
+                    </div>
+                    <form action="{{ url_for('remove_from_cart', item_id=item.id) }}" method="POST">
+                        <button class="remove-btn" type="submit">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="cart-summary">
+            <h3>Total: {{ total_price }} €</h3>
+            <a href="{{ url_for('checkout') }}" class="checkout-btn">Finalizar compra</a>
+        </div>
+    </div>
+</body>

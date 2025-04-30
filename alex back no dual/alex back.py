@@ -16,6 +16,7 @@ class User(db.Model):
     pais = db.Column(db.String(50), nullable=True)
     gmail = db.Column(db.String(50), nullable=True)
 
+#Funcion añadir/registrar usuario
 @app.route('/signup', methods=['GET', 'POST'])
 def add_user():
     if request.method == 'POST':
@@ -28,9 +29,10 @@ def add_user():
         new_user = User(id=id, fecha_nacimiento=fecha_nacimiento, nombre=nombre, apellidos=apellidos, pais=pais, gmail=gmail)
         db.session.add(new_user)
         db.session.commit()
-        return redirect(url_for('get_libros')) 
-    return render_template('signup.html')
+        return redirect(url_for('/login')) 
+    return render_template('sesion.html')
 
+#Funcion iniciar sesion de usuario ya existente
 @app.route('/login', methods=['GET', 'POST'])
 def login_user():
     if request.method == "POST":
@@ -41,10 +43,11 @@ def login_user():
             return redirect(url_for('user_profile', user_id=user.id)) 
         else:
             return 'Usuario no encontrado', 404
-    return render_template('login.html') 
+    return render_template('sesion.html')
 
+#
 @app.route('/user/<int:user_id>')
-def user_profile(user_id):
+def busqueda_user(user_id):
     user = User.query.get(user_id)
     if user:
         return jsonify({
@@ -57,3 +60,7 @@ def user_profile(user_id):
         })
     else:
         return jsonify({"error": "Usuario no encontrado"}), 404
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
