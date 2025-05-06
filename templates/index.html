@@ -37,7 +37,7 @@
         </ul>    
     </nav>
     <div class="menu-ordenar">
-      <form method="get" action="{{ url_for('/') }}">
+      <form method="get" action="{{url_for('index')}}">
         <label for="ordenar">Ordenar por:</label>
         <select name="ordenar" id="ordenar" onchange="this.form.submit()">
           <option value="precio-desc" {% if request.args.get('ordenar') == 'precio-desc' %}selected{% endif %}>Precio: mayor a menor</option>

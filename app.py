@@ -15,6 +15,32 @@ class User(db.Model):
     apellidos = db.Column(db.String(50), nullable=True)
     pais = db.Column(db.String(50), nullable=True)
     gmail = db.Column(db.String(50), nullable=True)
+    
+    
+class Producto(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+    precio = db.Column(db.Float, nullable=False)
+    imagen = db.Column(db.String(200), nullable=False)
+
+@app.route('/')
+def index():
+    # ordenar = request.args.get("ordenar", "precio-desc")
+    
+    # productos = [
+    #     {"nombre": "Producto A", "precio": 50},
+    #     {"nombre": "Producto B", "precio": 30},
+    #     {"nombre": "Producto C", "precio": 70}
+    # ]
+
+    # if ordenar == "precio-asc":
+    #     productos.sort(key=lambda x: x["precio"])
+    # elif ordenar == "precio-desc":
+    #     productos.sort(key=lambda x: x["precio"], reverse=True)
+    # elif ordenar == "nombre-az":
+    #     productos.sort(key=lambda x: x["nombre"])
+
+    return render_template("index.html")
 
 @app.route('/signup', methods=['GET', 'POST'])
 def add_user():
@@ -58,25 +84,12 @@ def user_profile(user_id):
     else:
         return jsonify({"error": "Usuario no encontrado"}), 404
 
-@app.route('/index.html')
-def index():
-    ordenar = request.args.get("ordenar", "precio-desc")
-    
-    productos = [
-        {"nombre": "Producto A", "precio": 50},
-        {"nombre": "Producto B", "precio": 30},
-        {"nombre": "Producto C", "precio": 70}
-    ]
+@app.route('/productos')
+def productos():
+    return render_template("productos.html")
 
-    if ordenar == "precio-asc":
-        productos.sort(key=lambda x: x["precio"])
-    elif ordenar == "precio-desc":
-        productos.sort(key=lambda x: x["precio"], reverse=True)
-    elif ordenar == "nombre-az":
-        productos.sort(key=lambda x: x["nombre"])
+if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
 
-    return render_template("productos.html", productos=productos)
-
-@app.route("/")
-def home():
-    return render_template("usuario.html")
+    app.run(debug=True)
