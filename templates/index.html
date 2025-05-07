@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <head>
     <title>Electromarkt</title>
-    <link rel="stylesheet" href="../styles/navbar.css">
-    <link rel="stylesheet" href="../styles/index.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
 </head>
 <body>
     <nav>
         <ul class="menu">
-            <img src="../img/white/rotulo.png" width="250" height="125">
+            <img src="{{ url_for('static', filename='img/white/rotulo.png') }}" width="250" height="125">
             <li><a href="#">Inicio</a></li>
             <li>
                 <a href="#">Productos ▼</a>
@@ -27,26 +27,24 @@
                 <input type="text" placeholder="Buscar...">
             </div>
             <div class="navbar-icons">
-                <button class="icon-button">
-                  <a href="carrito.html"><img src="../img/white/carrito.png" width="50%" height="50%"></a>
-                </button>
-                <button class="icon-button">
-                  <a href="singup.html"><img src="../img/white/userIcon.png" width="50%" height="50%"></a>
-                </button>
+                <form action="{{url_for('carrito')}}">
+                  <button type="submit" class="icon-button"><img src="{{ url_for('static', filename='img/white/carrito.png') }}" width="50%" height="50%"></button>
+                </form>
+                <form action="{{ url_for('singup')}}">
+                  <button type="submit" class="icon-button"><img src="{{ url_for('static', filename='img/white/userIcon.png') }}" width="50%" height="50%"></button>
+                </form>
               </div>
         </ul>    
     </nav>
-    <div class="menu-ordenar">
-      <form method="get" action="{{url_for('index')}}">
-        <label for="ordenar">Ordenar por:</label>
-        <select name="ordenar" id="ordenar" onchange="this.form.submit()">
-          <option value="precio-desc" {% if request.args.get('ordenar') == 'precio-desc' %}selected{% endif %}>Precio: mayor a menor</option>
-          <option value="precio-asc" {% if request.args.get('ordenar') == 'precio-asc' %}selected{% endif %}>Precio: menor a mayor</option>
-          <option value="nombre-az" {% if request.args.get('ordenar') == 'nombre-az' %}selected{% endif %}>Nombre: A-Z</option>
-        </select>
-      </form>
+
+    <div class="main">
+      {% for producto in productos %}
+        <div class="product-card">
+          <img src="{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}">
+          <h2>{{ producto.nombre }}</h2>
+          <p class="price">€{{ producto.precio }}</p>
+          <button>Agregar al carrito</button>
+        </div>
+      {% endfor %}
     </div>
-    
-      
-    
 </body>

@@ -4,19 +4,7 @@ body {
     background: navy;
   }
 
-  .menu-ordenar {
-    margin-bottom: 20px;
-    background: white;
-  }
-
-  .menu-ordenar a {
-    margin-right: 15px;
-    text-decoration: none;
-    color: navy;
-    font-weight: bold;
-  }
-
-  .productos {
+    .productos {
     width: 100%;
     border-collapse: collapse;
     background: white;

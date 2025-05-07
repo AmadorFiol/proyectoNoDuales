@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <head>
     <title>Registrate | Electromarkt</title>
-    <link rel="stylesheet" href="../styles/singup.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/singup.css') }}">
 </head>
 <body>
-    <a id="flecha" href="index.html"><img src="../img/white/flecha.png" height="50px"></a>
+    <form id="flecha" action="{{ url_for('index')}}">
+        <button type="submit"><img src="{{ url_for('static', filename='img/white/flecha.png') }}" height="50px"></button>
+    </form>
     <div id="formulario">
         <h1>Registrarse</h1>
-        <form method="POST" action="/signup">
-            <label for="id">ID:</label><br>
-            <input type="number" id="id" name="id" required><br><br>
-
-            <label for="fecha_nacimiento">Fecha de nacimiento:</label><br>
-            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento"><br><br>
+        <form method="POST" action="{{ url_for('singup')}}">
 
             <label for="nombre">Nombre:</label><br>
             <input type="text" id="nombre" name="nombre"><br><br>
@@ -26,9 +23,14 @@
             <label for="gmail">Correo electrónico:</label><br>
             <input type="email" id="gmail" name="gmail" required><br><br>
 
+            <label for="password">Contraseña</label><br>
+            <input type="text" id="password" name="password" required><br><br>
+
             <button type="submit">Registrarse</button>
         </form>
         <p>Ya tienes una cuenta?</p>
-        <p>Inicia sesion <a href="singin.html">aqui</a></p>
+        <form action="{{url_for('singin')}}">
+            <button type="submit">Inicia sesion aqui</button>
+        </form>
     </div>
 </body>
