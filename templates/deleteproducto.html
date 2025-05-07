@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Eliminar producto | Electromarkt</title>
+</head>
+    <body>
+        <form id="flecha" action="{{ url_for('index')}}">
+            <button type="submit"><img src="{{ url_for('static', filename='img/white/flecha.png') }}" height="50px"></button>
+        </form>
+        <h1>Eliminar producto</h1>
+        <form action="{{url_for('deleteproducto')}}" method="post">
+            <label>Producto</label><br>
+                <select name="producto" required>
+                    {% for producto in productos %}
+                        <option value="{{producto.id}}">{{producto.nombre}}</option>
+                    {% endfor %}
+                </select>
+            <br><br>
+            <input type="submit" value="Confirmar">
+        </form>
+    </body>
+</html>

@@ -12,12 +12,9 @@
             <li>
                 <a href="#">Productos ▼</a>
                 <ul class="submenu">
-                    <li><a href="#">Laptops</a></li>
-                    <li><a href="#">Tablets</a></li>
-                    <li><a href="#">Ordenadores</a></li>
-                    <li><a href="#">Software</a></li>
-                    <li><a href="#">Monitores</a></li>
-                    <li><a href="#">Componentes</a></li>
+                  {% for categoria in categorias %}
+                    <li><a href="#">{{categoria.nombre}}</a></li>
+                  {% endfor %}
                 </ul>
             </li>
             <div class="search-container">
@@ -42,9 +39,12 @@
         <div class="product-card">
           <img src="{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}">
           <h2>{{ producto.nombre }}</h2>
-          <p class="price">€{{ producto.precio }}</p>
-          <button>Agregar al carrito</button>
+          <p class="price">{{ producto.precio }}€</p>
+          <form action="{{ url_for('add_to_cart', producto_id=producto.id) }}" method="post">
+            <button type="submit">Añadir al carrito</button>
+          </form>
         </div>
       {% endfor %}
     </div>
+  
 </body>

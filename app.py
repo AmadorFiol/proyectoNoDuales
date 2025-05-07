@@ -42,14 +42,21 @@ class CarProd(db.Model):
     idProd=db.Column(db.Integer, nullable=False)
     cantidad=db.Column(db.Integer, nullable=False)
 
+class CarUser(db.Model):
+     id=db.Column(db.Integer, primary_key=True)
+     idCarrito=db.Column(db.Integer, nullable=False)
+     idUser=db.Column(db.Integer, nullable=False)
+
 def allowed_file(filename):
     return '.' in filename and filename.split('.')[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    categorias=Categoria.query.all()
+    productos=Producto.query.all()
+    return render_template("index.html",productos=productos,categorias=categorias)
 
-@app.route('/singup', methods=['GET', 'POST'])
+@app.route('/singup', methods=['GET', 'POST']) #Registrarse
 def singup():
     if request.method == 'POST':
         nombre = request.form.get('nombre')
@@ -63,15 +70,18 @@ def singup():
         return redirect(url_for('index')) 
     return render_template('singup.html')
 
-@app.route('/singin', methods=['GET', 'POST'])
+@app.route('/singin', methods=['GET', 'POST']) #Inicio sesion
 def singin():
+    
     if request.method == "POST":
         gmail = request.form.get('gmail')
         password=request.form.get('password')
         user = User.query.filter_by(gmail=gmail).first()
+
         if user:
            #Logica sintaxis del user
             return redirect(url_for('user_profile', user_id=user.id)) 
+
         else:
             return 'Usuario no encontrado', 404
     return render_template('singin.html') 
@@ -129,12 +139,42 @@ def addcategoria():
         nombre=request.form['nombre']
         db.session.add(Categoria(nombre=nombre))
         db.session.commit()
-        return render_template("index.html")
+        productos=Producto.query.all()
+        categorias=Categoria.query.all()
+        return render_template("index.html",productos=productos,categorias=categorias)
     return render_template("addcategoria.html")
+
+
+@app.route('/deleteproducto', methods=["GET","POST"])
+def deleteproducto():
+    productos=Producto.query.all()
+    if request.method=="POST":
+        producto = Producto.query.get(request.form['producto'])
+        db.session.delete(producto)
+        db.session.commit()
+        categorias=Categoria.query.all()
+        return render_template('index.html',productos=productos,categorias=categorias)
+    return render_template('deleteproducto.html',productos=productos)
+
+@app.route('/deletecategoria', methods=["GET","POST"])
+def deletecategoria():
+    categorias=Categoria.query.all()
+    if request.method=="POST":
+        categoria = Categoria.query.get(request.form['categoria'])
+        db.session.delete(categoria)
+        db.session.commit()
+        productos=Producto.query.all()
+        return render_template('index.html',productos=productos,categorias=categorias)
+    return render_template('deletecategoria.html',categorias=categorias)
 
 @app.route('/checkout')
 def checkout():
     pass
+
+@app.route('/add_to_cart')
+def add_to_cart():
+    if request.method == "POST":
+                        pass
 
 if __name__ == "__main__":
     with app.app_context():
