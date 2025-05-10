@@ -2,34 +2,34 @@ body {
     font-family: Arial, sans-serif;
     padding: 20px;
     background: navy;
-  }
+}
 
-    .productos {
+.productos {
     width: 100%;
     border-collapse: collapse;
     background: white;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     border-radius: 8px;
     overflow: hidden;
-  }
+}
 
-  .productos th, .productos td {
+.productos th, .productos td {
     padding: 15px;
     text-align: center;
     border-bottom: 1px solid white;
-  }
+}
 
-  .productos th {
+.productos th {
     background-color: navy;
     color: white;
     font-size: 18px;
-  }
+}
 
-  .productos tr:hover {
+.productos tr:hover {
     background-color: white;
-  }
+}
 
-  body {
+body {
     background-image: url("../img/fondo.jpg"); /* o usa background-color */
     background-size: cover;
     background-repeat: no-repeat;
@@ -78,4 +78,29 @@ body {
 
 .product-card button:hover {
     background-color: navy;
+}
+
+.product-card a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    cursor: pointer; /* NUEVO: cursor tipo enlace */
+    width: 100%;
+    height: 100%;
+}
+
+.product-card a div {
+    width: 100%;
+    height: 100%;
+}
+
+.product-card a img,
+.product-card a h2,
+.product-card a p {
+    pointer-events: auto; /* NUEVO: asegurar clicabilidad interna */
+}
+
+.product-card a:hover {
+    background-color: #e6f0ff;
+    border-radius: 8px;
 }

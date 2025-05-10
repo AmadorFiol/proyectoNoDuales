@@ -5,7 +5,9 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-
+  <form id="flecha" action="{{ url_for('index')}}">
+    <button type="submit"><img src="{{ url_for('static', filename='img/white/flecha.png') }}" height="50px"></button>
+  </form>
   <header class="usuario-header">
     {% if session.get('usuario') %}
       <p class="usuario-nombre">Bienvenido, {{ session['usuario'] }}</p>
@@ -13,13 +15,12 @@
         <button type="submit" class="boton-sesion">Sign off</button>
       </form>
     {% else %}
-      <a href="{{ url_for('login') }}" class="boton-sesion">Sign in</a>
+      <a href="{{ url_for('signup') }}" class="boton-sesion">Sign up</a>
     {% endif %}
   </header>
 
-  <main>
-    <h1>Contenido de la página</h1>
-    <!-- Aquí iría el contenido del usuario -->
-  </main>
+    <h1>{{ user.nombre}} {{ user.apellidos }}</h1>
+    <h2>{{ user.gmail }}</h2>
+    <p>{{ user.pais }}</p>
 
 </body>
