@@ -11,7 +11,7 @@ Aplicación web desarrollada en Flask que simula un sitio de venta de productos 
 - Flask SQLAlchemy
 - SQLite
 - HTML/CSS (Jinja2 templates)
-- Bootstrap (opcional, según contenido CSS)
+- LiveShare (escritura de codigo conjunta)
 - Draw.io (diagramas)
 
 ---
