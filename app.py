@@ -1,3 +1,10 @@
+'''
+TO DO:
+Revisar funciones carrito
+Realizar el README.md
+Realizar video explicativo (Si o si lo ultimo ya que las 2 anteriores han de estar hechas para poder hacer el video)
+'''
+
 #-----------------#
 #-----Imports-----#
 #-----------------#
@@ -65,7 +72,7 @@ def allowed_file(filename):
 def get_productos(carProds):
     productos=[]
     for carProd in carProds:
-        productos.append(Producto.query.filter_by(id=carProd.idProd).all()) #SELECT * FROM Producto WHERE id=$carProds.idProd
+        productos.append(Producto.query.filter_by(id=carProd.idProd).first()) #SELECT * FROM Producto WHERE id=$carProds.idProd LIMIT 1
     return productos
 
 
@@ -176,6 +183,15 @@ def deleteproducto():
         db.session.commit()
     return render_template('deleteproducto.html', productos=productos)
 
+@app.route('/updatestock', methods=["GET", "POST"])
+def updatestock():
+    productos = Producto.query.all()
+    if request.method == "POST":
+        producto = Producto.query.get(request.form['producto'])
+        producto.stock = int(request.form['stock'])
+        db.session.commit()
+    return render_template('updatestock.html', productos=productos)
+
 #----------------------------------#
 #-----Enpoints de <Categorias>-----#
 #----------------------------------#
@@ -208,34 +224,38 @@ def deletecategoria():
 #-----Enpoints de <Carritos>-----#
 #--------------------------------#
 @app.route('/carrito', methods=["GET", "POST"])
-#El carrito no muestra los productos aun, hay que investigar pq, quizas no se guardan bien en la db?
 def carrito():
     user_id=session.get('user_id')
     carrito=Carrito.query.filter_by(idUser=user_id).order_by(Carrito.id.desc()).first() #SELECT * FROM Carrito WHERE idUser=$user_id ORDER BY id DESC LIMIT 1
     carProds=CarProd.query.filter_by(idCarrito=carrito.id).all() #SELECT * FROM CarProd WHERE idCarrito=$carrito.id
     productos=get_productos(carProds)
+    precio_total = 0
+    for carProd in carProds:
+        for producto in productos:
+            if carProd.idProd == producto.id:
+                precio_total += producto.precio
+
     #Hay que pasar los carProds tambien ya que si se cambia la cantidad o se eliminan productos del carrito
     # hay que realizar cambios tanto en CarProd como en Producto, mas especificamente los campos de
     # cantidad en CarProd y stock en Producto, de hecho en caso de eliminar el producto del carrito
     # se ha de eliminar el respectivo registro de CarProd
-    return render_template("carrito.html", carrito=carrito, productos=productos, carProds=carProds)
+    return render_template("carrito.html", carrito=carrito, productos=productos, carProds=carProds,precio_total=precio_total)
 
 @app.route('/add_to_cart', methods=["POST"])
 def add_to_cart():
     user_id = session.get('user_id')
     carrito=Carrito.query.filter_by(idUser=user_id).order_by(Carrito.id.desc()).first() #SELECT * FROM Carrito WHERE idUser=$user_id ORDER BY id DESC LIMIT 1
     producto_id=request.form['producto_id']
+    cantidad=int(request.form['cantidad'])
     producto=Producto.query.get(producto_id)
-    producto.stock=producto.stock-1
+    producto.stock=producto.stock-cantidad
     newCarProd=CarProd(idCarrito=carrito.id,idProd=producto.id,cantidad=1)
     db.session.add(newCarProd)
     db.session.commit()
     return redirect(url_for('index'))
 
 @app.route('/actualizarcantidad', methods=["POST"])
-#Posiblemente ya completada, pero se ha de comprobar
-# ya que como dije antes el carrito no muestra los productos
-# asi que no pude comprobar el endpoint
+#Revisar esta funcion
 def actualizarcantidad():
     producto=Producto.query.get(request.form['producto_id'])
     carProd=CarProd.query.get(request.form['carProd_id'])
@@ -246,8 +266,7 @@ def actualizarcantidad():
     return redirect(url_for('carrito'))
 
 @app.route('/remove_from_cart',methods=["POST"])
-#Mismo caso que endpoint anterior, debido al malfuncionamiento
-# de /carrito aun no he podido probar si funciona este endpoint
+#Revisar esta funcion
 def remove_from_cart():
     producto=Producto.query.get(request.form['producto_id'])
     carProd=CarProd.query.get(request.form['carProd_id'])

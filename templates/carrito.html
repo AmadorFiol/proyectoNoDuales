@@ -15,13 +15,13 @@
                     {% for producto in productos %}
                         {% if carProd.idProd==producto.id %}
                             <div class="cart-item">
-                                <img src="{{ producto.imagen }}" alt="{{ producto.nombre }}">
+                                <img src="../{{ producto.imagen }}" alt="{{ producto.nombre }}">
                                 <div class="producto-details">
                                     <h2>{{ producto.nombre }}</h2>
                                     <p>{{ producto.descripcion }}</p>
                                     <span class="price">{{ producto.precio}} € * {{ carProd.cantidad }} unidad(es)</span>
                                     <div class="quantity-control">
-                                        <form action="{{ url_for('actualizar_cantidad', producto_id=producto.id,carProd_id=carProd.id, diferencia=diferencia) }}" method="POST">
+                                        <form action="{{ url_for('actualizarcantidad', producto_id=producto.id,carProd_id=carProd.id, diferencia=diferencia) }}" method="POST">
                                             <input type="number" name="diferencia" value="{{ carProd.cantidad }}" min="1" max="{{ producto.stock }}">
                                             <button type="submit">Actualizar</button>
                                         </form>
@@ -31,7 +31,6 @@
                                     </form>
                                 </div>
                             </div>
-                            {{ precio_total += (producto.precio*carProd.cantidad)}}
                         {% endif %}
                     {% endfor %}
                 {% endif %}

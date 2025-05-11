@@ -12,7 +12,7 @@
             <img src="{{ url_for('static', filename='img/white/rotulo.png') }}" width="250" height="125">
             <li><a href="#">Inicio</a></li>
             <li>
-                <a href="#">Productos ▼</a>
+                <a href="{{ url_for('index') }}">Productos ▼</a>
                 <ul class="submenu">
                   {% for categoria in categorias %}
                     <li><a href="{{ url_for('categorias', categoria_id=categoria.id) }}">{{ categoria.nombre }}</a></li>

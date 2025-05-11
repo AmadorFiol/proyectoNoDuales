@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{categoria.nombre}} | Electromarkt</title>
-  <link rel="stylesheet" href="../styles/producto.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
 </head>
 <body>
     <form id="flecha" action="{{ url_for('index')}}">
@@ -14,11 +14,15 @@
         {% for producto in productos %}
             {% if producto.categoria == categoria.id %}
                 <div class="product-card">
-                    <img src="{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}">
-                    <h2>{{ producto.nombre }}</h2>
-                    <p class="price">{{ producto.precio }}€</p>
-                    <form action="{{ url_for('add_to_cart', producto_id=producto.id) }}" method="post">
-                        <button type="submit">Añadir al carrito</button>
+                    <a href="{{ url_for('productos', product_id=producto.id) }}">
+                        <div>
+                        <img src="../{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}">
+                        <h2>{{ producto.nombre }}</h2>
+                        <p class="price">{{ producto.precio }}€</p>
+                        </div>
+                    </a>
+                    <form action="{{ url_for('add_to_cart',cantidad=1) }}" method="post">
+                        <button type="submit" name="producto_id" value="{{ producto.id }}">Añadir al carrito</button>
                     </form>
                 </div>
             {% endif %}

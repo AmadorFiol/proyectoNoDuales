@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Actualizar Stock | Electromarkt</title>
+</head>
+    <body>
+        <form id="flecha" action="{{ url_for('index')}}">
+            <button type="submit"><img src="{{ url_for('static', filename='img/white/flecha.png') }}" height="50px"></button>
+        </form>
+        <h1>Actualizar Stock</h1>
+        <form action="{{url_for('updatestock')}}" method="post">
+            <label>Producto</label><br>
+                <select name="producto" required>
+                    {% for producto in productos %}
+                        <option value="{{producto.id}}">{{producto.nombre}}</option>
+                    {% endfor %}
+                </select>
+            <br>
+            <label>Stock</label><br>
+            <input type="number" name="stock">
+            <br><br>
+            <input type="submit" value="Confirmar">
+        </form>
+    </body>
+</html>

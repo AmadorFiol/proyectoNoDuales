@@ -1,12 +1,11 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
-    color: #333;
+    background-color: navy;
   }
   
   header {
-    background-color: #d40000;
+    background-color: navy;
     color: white;
     padding: 1rem 2rem;
     text-align: center;
@@ -43,13 +42,13 @@ body {
   }
   
   .price {
-    color: #d40000;
+    color: navy;
     font-weight: bold;
     margin: 0.5rem 0;
   }
   
   button {
-    background-color: #d40000;
+    background-color: navy;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -60,6 +59,6 @@ body {
   }
   
   button:hover {
-    background-color: #a80000;
+    background-color: navy;
   }
   
