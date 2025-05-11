@@ -60,7 +60,7 @@
             </div>
           </a>
           <form action="{{ url_for('add_to_cart') }}" method="post">
-            <button type="submit" name="product_id" value="{{ producto.id }}">Añadir al carrito</button>
+            <button type="submit" name="producto_id" value="{{ producto.id }}">Añadir al carrito</button>
           </form>
         </div>
       {% endfor %}

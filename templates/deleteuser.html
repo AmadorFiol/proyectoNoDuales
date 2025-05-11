@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Eliminar Usuario | Electromarkt</title>
+</head>
+    <body>
+        <form id="flecha" action="{{ url_for('index')}}">
+            <button type="submit"><img src="{{ url_for('static', filename='img/white/flecha.png') }}" height="50px"></button>
+        </form>
+        <h1>Eliminar user</h1>
+        <form action="{{url_for('deleteuser')}}" method="post">
+            <label>Usuario</label><br>
+                <select name="user" required>
+                    {% for user in users %}
+                        <option value="{{user.id}}">{{user.nombre}}</option>
+                    {% endfor %}
+                </select>
+            <br><br>
+            <input type="submit" value="Confirmar">
+        </form>
+    </body>
+</html>

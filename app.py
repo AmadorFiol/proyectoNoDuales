@@ -1,10 +1,15 @@
+#-----------------#
 #-----Imports-----#
-from flask import Flask, jsonify, render_template, request, redirect, url_for, session
+#-----------------#
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 import os
 
+
+#---------------------------#
 #-----Configuracion app-----#
+#---------------------------#
 app = Flask(__name__)
 app.secret_key = 'una_clave_secreta_segura'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///electromarkt.db'
@@ -13,7 +18,10 @@ app.config['UPLOAD_FOLDER'] = 'static/img/productos'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 #Tamaño maximo archivos hasta 16MB
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+
+#-----------------------#
 #-----Base de datos-----#
+#-----------------------#
 db = SQLAlchemy(app)
 
 class User(db.Model):
@@ -39,7 +47,7 @@ class Categoria(db.Model):
 
 class Carrito(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    idUser = db.Column(db.Integer, nullable=False)
+    idUser = db.Column(db.Integer, nullable=True)
 
 class CarProd(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -47,11 +55,23 @@ class CarProd(db.Model):
     idProd = db.Column(db.Integer, nullable=False)
     cantidad = db.Column(db.Integer, nullable=False)
 
+
+#----------------------------#
 #-----Funciones globales-----#
+#----------------------------#
 def allowed_file(filename):
     return '.' in filename and filename.split('.')[1].lower() in ALLOWED_EXTENSIONS
 
+def get_productos(carProds):
+    productos=[]
+    for carProd in carProds:
+        productos.append(Producto.query.filter_by(id=carProd.idProd).all()) #SELECT * FROM Producto WHERE id=$carProds.idProd
+    return productos
+
+
+#------------------------------#
 #-----Inicio Endpoints Web-----#
+#------------------------------#
 @app.route('/')
 def index():
     categorias = Categoria.query.all()
@@ -59,7 +79,9 @@ def index():
     user_id = session.get('user_id')
     return render_template("index.html", productos=productos, categorias=categorias, user_id=user_id)
 
+#--------------------------------#
 #-----Enpoints de <Usuarios>-----#
+#--------------------------------#
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -71,12 +93,11 @@ def signup():
         new_user = User(nombre=nombre, apellidos=apellidos, pais=pais, gmail=gmail, password=password)
         db.session.add(new_user)
         db.session.commit()
-        user=User.query.order_by(User.id.desc()).first()
+        user=User.query.order_by(User.id.desc()).first() #SELECT * FROM User ORDER BY id DESC LIMIT 1
         session['user_id'] = user.id
-        newCarrito=Carrito(user.id)                                 #Creo instancia nuevo carrito
-        db.session.add(newCarrito)                                  #Agregar la instancia nueva a los cambios
-        db.session.commit()                                         #Subo los cambio a base de datos
-        carrito=Carrito.query.order_by(Carrito.id.desc()).first()   #Obtener id de ultimo carrito creado
+        newCarrito=Carrito(idUser=user.id)
+        db.session.add(newCarrito)
+        db.session.commit()
         return redirect(url_for('index'))
     return render_template('signup.html')
 
@@ -85,7 +106,7 @@ def signin():
     if request.method == "POST":
         gmail = request.form.get('gmail')
         password = request.form.get('password')
-        user = User.query.filter_by(gmail=gmail, password=password).first()
+        user = User.query.filter_by(gmail=gmail, password=password).first() #SELECT * FROM User WHERE gmail=$gmail AND password=$password LIMIT 1
 
         if user:
             session['user_id'] = user.id
@@ -104,7 +125,19 @@ def user(user_id):
     user = User.query.get(user_id)
     return render_template("users.html", user=user)
 
+@app.route('/deleteuser', methods=["GET", "POST"])
+def deleteuser():
+    users = User.query.all()
+    if request.method == "POST":
+        user = User.query.get(request.form['user'])
+        db.session.delete(user)
+        db.session.commit()
+        users=User.query.all()
+    return render_template('deleteuser.html', users=users)
+
+#---------------------------------#
 #-----Enpoints de <Productos>-----#
+#---------------------------------#
 @app.route('/productos/<int:product_id>')
 def productos(product_id):
     producto = Producto.query.get(product_id)
@@ -129,7 +162,6 @@ def addproducto():
         newProducto = Producto(nombre=nombre, precio=precio, categoria=categoria, imagen=urlImg, stock=stock, descripcion=descripcion)
         db.session.add(newProducto)
         db.session.commit()
-        return redirect(url_for("index"))
 
     categorias = Categoria.query.all()
     return render_template("addproducto.html", categorias=categorias)
@@ -142,11 +174,11 @@ def deleteproducto():
         os.system(f"rm {producto.imagen}")
         db.session.delete(producto)
         db.session.commit()
-        categorias = Categoria.query.all()
-        return render_template('index.html', productos=productos, categorias=categorias)
     return render_template('deleteproducto.html', productos=productos)
 
+#----------------------------------#
 #-----Enpoints de <Categorias>-----#
+#----------------------------------#
 @app.route('/categorias/<int:categoria_id>')
 def categorias(categoria_id):
     productos=Producto.query.all()
@@ -161,7 +193,6 @@ def addcategoria():
         db.session.commit()
         productos = Producto.query.all()
         categorias = Categoria.query.all()
-        return render_template("index.html", productos=productos, categorias=categorias)
     return render_template("addcategoria.html")
 
 @app.route('/deletecategoria', methods=["GET", "POST"])
@@ -171,40 +202,74 @@ def deletecategoria():
         categoria = Categoria.query.get(request.form['categoria'])
         db.session.delete(categoria)
         db.session.commit()
-        productos = Producto.query.all()
-        return render_template('index.html', productos=productos, categorias=categorias)
     return render_template('deletecategoria.html', categorias=categorias)
 
+#--------------------------------#
 #-----Enpoints de <Carritos>-----#
+#--------------------------------#
 @app.route('/carrito', methods=["GET", "POST"])
+#El carrito no muestra los productos aun, hay que investigar pq, quizas no se guardan bien en la db?
 def carrito():
-    return render_template("carrito.html")
-
-@app.route('/checkout')
-def checkout(): #No esta completa, solo tiene la parte final de crear otro carrito
     user_id=session.get('user_id')
-    newCarrito=Carrito(idUser=user_id)                          #Creo instancia nuevo carrito
-    db.session.add(newCarrito)                                  #Agregar la instancia nueva a los cambios
-    db.session.commit()                                         #Subo los cambio a base de datos
-    carrito=Carrito.query.order_by(Carrito.id.desc()).first()   #Obtener id de ultimo carrito creado
+    carrito=Carrito.query.filter_by(idUser=user_id).order_by(Carrito.id.desc()).first() #SELECT * FROM Carrito WHERE idUser=$user_id ORDER BY id DESC LIMIT 1
+    carProds=CarProd.query.filter_by(idCarrito=carrito.id).all() #SELECT * FROM CarProd WHERE idCarrito=$carrito.id
+    productos=get_productos(carProds)
+    #Hay que pasar los carProds tambien ya que si se cambia la cantidad o se eliminan productos del carrito
+    # hay que realizar cambios tanto en CarProd como en Producto, mas especificamente los campos de
+    # cantidad en CarProd y stock en Producto, de hecho en caso de eliminar el producto del carrito
+    # se ha de eliminar el respectivo registro de CarProd
+    return render_template("carrito.html", carrito=carrito, productos=productos, carProds=carProds)
 
 @app.route('/add_to_cart', methods=["POST"])
 def add_to_cart():
     user_id = session.get('user_id')
-    carrito=Carrito.query.order_by(Carrito.id.desc()).get(user_id)
+    carrito=Carrito.query.filter_by(idUser=user_id).order_by(Carrito.id.desc()).first() #SELECT * FROM Carrito WHERE idUser=$user_id ORDER BY id DESC LIMIT 1
+    producto_id=request.form['producto_id']
+    producto=Producto.query.get(producto_id)
+    producto.stock=producto.stock-1
+    newCarProd=CarProd(idCarrito=carrito.id,idProd=producto.id,cantidad=1)
+    db.session.add(newCarProd)
+    db.session.commit()
+    return redirect(url_for('index'))
 
-    if request.method=="POST":
-        producto_id=request.form['product_id']
-        producto=Producto.query.get(producto_id)
-        newCarProd=CarProd(idCarrito=carrito.id,idProd=producto.id,cantidad=1)
-        db.session.add(newCarProd)
-        db.session.commit()
-    
-    #Hacerle un return adecuado
+@app.route('/actualizarcantidad', methods=["POST"])
+#Posiblemente ya completada, pero se ha de comprobar
+# ya que como dije antes el carrito no muestra los productos
+# asi que no pude comprobar el endpoint
+def actualizarcantidad():
+    producto=Producto.query.get(request.form['producto_id'])
+    carProd=CarProd.query.get(request.form['carProd_id'])
+    diferencia=carProd.cantidad-request.form['diferencia']
+    producto.stock+=diferencia
+    carProd.cantidad-=diferencia
+    db.session.commit()
+    return redirect(url_for('carrito'))
 
-    #Idea, a carrito hay que pasarle la id de a que carrito a de ir
+@app.route('/remove_from_cart',methods=["POST"])
+#Mismo caso que endpoint anterior, debido al malfuncionamiento
+# de /carrito aun no he podido probar si funciona este endpoint
+def remove_from_cart():
+    producto=Producto.query.get(request.form['producto_id'])
+    carProd=CarProd.query.get(request.form['carProd_id'])
+    producto.stock+=carProd.cantidad
+    db.session.delete(carProd)
+    db.session.commit()
+    return redirect(url_for('carrito'))
 
+@app.route('/checkout')
+#No creo que este completa, solo tiene la parte de crear otro carrito
+def checkout():
+    user_id=session.get('user_id')
+    newCarrito=Carrito(idUser=user_id)
+    db.session.add(newCarrito)
+    db.session.commit()
+    carrito=Carrito.query.order_by(Carrito.id.desc()).first()   #Obtener id de ultimo carrito creado #SELECT * FROM Carrito ORDER BY id DESC LIMIT 1
+    return render_template('checkout.html')
+
+
+#--------------#
 #-----Main-----#
+#--------------#
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
