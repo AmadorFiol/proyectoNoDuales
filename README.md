@@ -21,7 +21,7 @@ Aplicación web desarrollada en Flask que simula un sitio de venta de productos 
 1. **Clona el repositorio o descomprime el proyecto:**
 
 ```bash
-cd proyectoNoDuales-development
+cd proyectoNoDuales
 
 2. **Crea un entorno virtual (opcional pero recomendado):**
 
@@ -34,5 +34,5 @@ pip install flask flask_sqlalchemy
 
 python app.py
 
-http://127.0.0.1:5500/proyectoNoDuales-development/
+http://127.0.0.1:5000/
 
