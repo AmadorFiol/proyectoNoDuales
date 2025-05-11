@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Eliminar categoria | Electromarkt</title>
+</head>
+    <body>
+        <form id="flecha" action="{{ url_for('index')}}">
+            <button type="submit"><img src="{{ url_for('static', filename='img/white/flecha.png') }}" height="50px"></button>
+        </form>
+        <h1>Eliminar categoria</h1>
+        <form action="{{url_for('deletecategoria')}}" method="post">
+            <label>Categoria</label><br>
+                <select name="categoria" required>
+                    {% for categoria in categorias %}
+                        <option value="{{categoria.id}}">{{categoria.nombre}}</option>
+                    {% endfor %}
+                </select>
+            <br><br>
+            <input type="submit" value="Confirmar">
+        </form>
+    </body>
+</html>

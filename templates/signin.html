@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<head>
+    <title>Sign In | Electromarkt</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/signin.css') }}">
+</head>
+<body>
+    <form id="flecha" action="{{ url_for('index')}}">
+        <button type="submit"><img src="{{ url_for('static', filename='img/white/flecha.png') }}" height="50px"></button>
+    </form>
+    <div id="formulario">
+        <h1>Iniciar sesión</h1>
+        <form method="POST" action="{{url_for('signin')}}">
+            <label for="gmail">Correo electrónico:</label><br>
+            <input type="email" id="gmail" name="gmail" required><br><br>
+            <label for="password">Contraseña:</label><br>
+            <input type="text" id="password" name="password" required><br><br>
+            <button type="submit">Iniciar sesión</button>
+        </form>
+    </div>
+</body>

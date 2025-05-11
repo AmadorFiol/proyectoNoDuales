@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil de Usuario</title>
+</head>
+<body>
+    <h1>Bienvenido, {{ user.nombre }}</h1>
+    <ul>
+        <li><strong>ID:</strong> {{ user.id }}</li>
+        <li><strong>Nombre:</strong> {{ user.nombre }}</li>
+        <li><strong>Apellidos:</strong> {{ user.apellidos }}</li>
+        <li><strong>Correo:</strong> {{ user.gmail }}</li>
+        <li><strong>País:</strong> {{ user.pais }}</li>
+        <li><strong>Fecha de nacimiento:</strong> {{ user.fecha_nacimiento.strftime('%Y-%m-%d') }}</li>
+    </ul>
+</body>
+</html>

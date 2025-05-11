@@ -1,0 +1,9 @@
+body {
+    background-color: navy;
+    align-content: center;
+}
+
+#formulario {
+    background-color: white;
+    width: fit-content;
+}

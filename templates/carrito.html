@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Carrito | Electromarkt</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/carrito.css') }}">
+</head>
+<body>
+    <form id="flecha" action="{{ url_for('index') }}">
+        <button type="submit">
+            <img src="{{ url_for('static', filename='img/white/flecha.png') }}" height="50px">
+        </button>
+    </form>
+
+    <div class="cart-container">
+        <div class="cart-items">
+            {% for carProd in carProds %}
+                {% if carProd.idCarrito == carrito.id %}
+                    {% for producto in productos %}
+                        {% if carProd.idProd == producto.id %}
+                            <div class="cart-item">
+                                <img src="../{{ producto.imagen }}" alt="{{ producto.nombre }}">
+                                <div class="producto-details">
+                                    <h2>{{ producto.nombre }}</h2>
+                                    <p>{{ producto.descripcion }}</p>
+                                    <span class="price">{{ producto.precio }} € * {{ carProd.cantidad }} unidad(es)</span>
+
+                                    <div class="quantity-control">
+                                        <form action="{{ url_for('actualizarcantidad') }}" method="POST">
+                                            <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                                            <input type="hidden" name="carProd_id" value="{{ carProd.id }}">
+                                            <input type="number" name="diferencia" value="{{ carProd.cantidad }}" min="1" max="{{ producto.stock + carProd.cantidad }}">
+                                            <button type="submit">Actualizar</button>
+                                        </form>
+                                    </div>
+
+                                    <form action="{{ url_for('remove_from_cart') }}" method="POST">
+                                        <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                                        <input type="hidden" name="carProd_id" value="{{ carProd.id }}">
+                                        <button class="remove-btn" type="submit">Eliminar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="cart-summary">
+            <h3>Total: {{ precio_total }} €</h3>
+            <a href="{{ url_for('checkout') }}" class="checkout-btn">Finalizar compra</a>
+        </div>
+    </div>
+</body>
+</html>

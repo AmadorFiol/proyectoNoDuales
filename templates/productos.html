@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{producto.nombre}} | Electromarkt</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/productos.css') }}">
+</head>
+<body>
+  <main class="product-grid">
+    <form id="flecha" action="{{ url_for('index')}}">
+      <button type="submit"><img src="{{ url_for('static', filename='img/white/flecha.png') }}" height="50px"></button>
+  </form>
+    <div class="product-card">
+      <img src="../{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}">
+      <h2>{{ producto.nombre }}</h2>
+      <p>{{ producto.descripcion }}</p>
+      <p> En stock quedan {{ producto.stock }} unidades</p>
+      <p class="price">€{{ producto.precio }}</p>
+      <form action="{{ url_for('add_to_cart') }}" method="post">
+        <label>Cantidad</label>
+        <input type="number" name="cantidad" min="1" max="{{ producto.stock }}" required>
+        <br>
+        <button type="submit" name="producto_id" value="{{ producto.id }}">Añadir al carrito</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Agregar producto | Electromarkt</title>
+</head>
+    <body>
+        <form id="flecha" action="{{ url_for('index')}}">
+            <button type="submit"><img src="{{ url_for('static', filename='img/white/flecha.png') }}" height="50px"></button>
+        </form>
+        <h1>Agregar producto</h1>
+        <form action="{{url_for('addproducto')}}" method="post" enctype="multipart/form-data">
+            <label>Nombre</label><br>
+            <input type="text" name="nombre" required>
+            <br>
+
+            <label>Precio</label><br>
+            <input type="number" name="precio" required>
+            <br>
+
+            <label>Imagen</label><br>
+            <input type="file" name="imagen" required>
+            <br>
+
+            <label>Stock</label><br>
+            <input type="number" name="stock" required>
+            <br>
+
+            <label>Descripcion</label><br>
+            <input type="text" name="descripcion" required>
+            <br>
+
+            <label>Categoria</label><br>
+                <select name="categoria" required>
+                    {% for categoria in categorias %}
+                        <option value="{{categoria.id}}">{{categoria.nombre}}</option>
+                    {% endfor %}
+                </select>
+            <br><br>
+            <input type="submit" value="Confirmar">
+        </form>
+    </body>
+</html>
+

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Electromarkt</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+</head>
+<body>
+    <nav>
+        <ul class="menu">
+            <img src="{{ url_for('static', filename='img/white/rotulo.png') }}" width="250" height="125">
+            <li><a href="#">Inicio</a></li>
+            <li>
+                <a href="{{ url_for('index') }}">Productos ▼</a>
+                <ul class="submenu">
+                  {% for categoria in categorias %}
+                    <li><a href="{{ url_for('categorias', categoria_id=categoria.id) }}">{{ categoria.nombre }}</a></li>
+                  {% endfor %}
+                </ul>
+            </li>
+            <div class="search-container">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 2a8 8 0 015.29 13.71l4.48 4.48-1.42 1.42-4.48-4.48A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z" />
+                </svg>
+                <input type="text" placeholder="Buscar...">
+            </div>
+            <div class="navbar-icons">
+                <form action="{{ url_for('carrito') }}">
+                    <button type="submit" class="icon-button">
+                        <img src="{{ url_for('static', filename='img/white/carrito.png') }}" width="50%" height="50%">
+                    </button>
+                </form>
+
+                {% if user_id %}
+                <form action="{{ url_for('user', user_id=user_id) }}">
+                    <button type="submit" class="icon-button">
+                        <img src="{{ url_for('static', filename='img/white/userIcon.png') }}" width="50%" height="50%">
+                    </button>
+                </form>
+                {% else %}
+                <form action="{{ url_for('signup') }}">
+                    <button type="submit" class="icon-button">
+                        <img src="{{ url_for('static', filename='img/white/userIcon.png') }}" width="50%" height="50%">
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </ul>    
+    </nav>
+
+    <div class="main">
+      {% for producto in productos %}
+        <div class="product-card">
+          <a href="{{ url_for('productos', product_id=producto.id) }}">
+            <div>
+              <img src="{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}">
+              <h2>{{ producto.nombre }}</h2>
+              <p class="price">{{ producto.precio }}€</p>
+            </div>
+          </a>
+          <form action="{{ url_for('add_to_cart') }}" method="post">
+            <input type="hidden" name="producto_id" value="{{ producto.id }}">
+            <input type="hidden" name="cantidad" value="1">
+            <button type="submit">Añadir al carrito</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+</body>
+</html>
