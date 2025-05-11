@@ -1,10 +1,3 @@
-'''
-TO DO:
-Revisar funciones carrito
-Realizar el README.md
-Realizar video explicativo (Si o si lo ultimo ya que las 2 anteriores han de estar hechas para poder hacer el video)
-'''
-
 #-----------------#
 #-----Imports-----#
 #-----------------#
@@ -12,7 +5,6 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 import os
-
 
 #---------------------------#
 #-----Configuracion app-----#
@@ -24,7 +16,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/img/productos'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 #Tamaño maximo archivos hasta 16MB
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-
 
 #-----------------------#
 #-----Base de datos-----#
@@ -62,7 +53,6 @@ class CarProd(db.Model):
     idProd = db.Column(db.Integer, nullable=False)
     cantidad = db.Column(db.Integer, nullable=False)
 
-
 #----------------------------#
 #-----Funciones globales-----#
 #----------------------------#
@@ -74,7 +64,6 @@ def get_productos(carProds):
     for carProd in carProds:
         productos.append(Producto.query.filter_by(id=carProd.idProd).first()) #SELECT * FROM Producto WHERE id=$carProds.idProd LIMIT 1
     return productos
-
 
 #------------------------------#
 #-----Inicio Endpoints Web-----#
@@ -207,8 +196,6 @@ def addcategoria():
         nombre = request.form['nombre']
         db.session.add(Categoria(nombre=nombre))
         db.session.commit()
-        productos = Producto.query.all()
-        categorias = Categoria.query.all()
     return render_template("addcategoria.html")
 
 @app.route('/deletecategoria', methods=["GET", "POST"])
@@ -225,66 +212,89 @@ def deletecategoria():
 #--------------------------------#
 @app.route('/carrito', methods=["GET", "POST"])
 def carrito():
-    user_id=session.get('user_id')
-    carrito=Carrito.query.filter_by(idUser=user_id).order_by(Carrito.id.desc()).first() #SELECT * FROM Carrito WHERE idUser=$user_id ORDER BY id DESC LIMIT 1
-    carProds=CarProd.query.filter_by(idCarrito=carrito.id).all() #SELECT * FROM CarProd WHERE idCarrito=$carrito.id
-    productos=get_productos(carProds)
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('signin'))
+
+    carrito = Carrito.query.filter_by(idUser=user_id).order_by(Carrito.id.desc()).first() #SELECT * FROM Carrito WHERE idUser=$user_id ORDER BY id DESC LIMIT 1
+    if not carrito:
+        return render_template("carrito.html", carrito=None, productos=[], carProds=[], precio_total=0)
+
+    carProds = CarProd.query.filter_by(idCarrito=carrito.id).all() #SELECT * FROM CarProd WHERE idCarrito=$carrito.id
+    productos = get_productos(carProds)
     precio_total = 0
     for carProd in carProds:
         for producto in productos:
             if carProd.idProd == producto.id:
-                precio_total += producto.precio
-
+                precio_total += producto.precio * carProd.cantidad
     #Hay que pasar los carProds tambien ya que si se cambia la cantidad o se eliminan productos del carrito
     # hay que realizar cambios tanto en CarProd como en Producto, mas especificamente los campos de
     # cantidad en CarProd y stock en Producto, de hecho en caso de eliminar el producto del carrito
     # se ha de eliminar el respectivo registro de CarProd
-    return render_template("carrito.html", carrito=carrito, productos=productos, carProds=carProds,precio_total=precio_total)
+    return render_template("carrito.html", carrito=carrito, productos=productos, carProds=carProds, precio_total=precio_total)
 
 @app.route('/add_to_cart', methods=["POST"])
 def add_to_cart():
     user_id = session.get('user_id')
-    carrito=Carrito.query.filter_by(idUser=user_id).order_by(Carrito.id.desc()).first() #SELECT * FROM Carrito WHERE idUser=$user_id ORDER BY id DESC LIMIT 1
-    producto_id=request.form['producto_id']
-    cantidad=int(request.form['cantidad'])
-    producto=Producto.query.get(producto_id)
-    producto.stock=producto.stock-cantidad
-    newCarProd=CarProd(idCarrito=carrito.id,idProd=producto.id,cantidad=1)
-    db.session.add(newCarProd)
-    db.session.commit()
-    return redirect(url_for('index'))
+    if not user_id:
+        return redirect(url_for('signin'))
+
+    carrito = Carrito.query.filter_by(idUser=user_id).order_by(Carrito.id.desc()).first() #SELECT * FROM Carrito WHERE idUser=$user_id ORDER BY id DESC LIMIT 1
+    producto_id = int(request.form['producto_id'])
+    cantidad = int(request.form['cantidad'])
+
+    producto = Producto.query.get(producto_id)
+    if producto and producto.stock >= cantidad:
+        producto.stock -= cantidad
+        newCarProd = CarProd(idCarrito=carrito.id, idProd=producto.id, cantidad=cantidad)
+        db.session.add(newCarProd)
+        db.session.commit()
+        return redirect(url_for('index'))
+    else:
+        return "No hay suficiente stock disponible.", 400
 
 @app.route('/actualizarcantidad', methods=["POST"])
-#Revisar esta funcion
 def actualizarcantidad():
-    producto=Producto.query.get(request.form['producto_id'])
-    carProd=CarProd.query.get(request.form['carProd_id'])
-    diferencia=carProd.cantidad-request.form['diferencia']
-    producto.stock+=diferencia
-    carProd.cantidad-=diferencia
-    db.session.commit()
+    producto_id = int(request.form['producto_id'])
+    carProd_id = int(request.form['carProd_id'])
+    nueva_cantidad = int(request.form['diferencia'])
+
+    carProd = CarProd.query.get(carProd_id)
+    producto = Producto.query.get(producto_id)
+
+    if carProd and producto:
+        diferencia = nueva_cantidad - carProd.cantidad
+        if producto.stock >= diferencia:
+            producto.stock -= diferencia
+            carProd.cantidad = nueva_cantidad
+            db.session.commit()
+        else:
+            return "No hay suficiente stock disponible.", 400
+
     return redirect(url_for('carrito'))
 
-@app.route('/remove_from_cart',methods=["POST"])
-#Revisar esta funcion
+@app.route('/remove_from_cart', methods=["POST"])
 def remove_from_cart():
-    producto=Producto.query.get(request.form['producto_id'])
-    carProd=CarProd.query.get(request.form['carProd_id'])
-    producto.stock+=carProd.cantidad
-    db.session.delete(carProd)
-    db.session.commit()
+    producto_id = int(request.form['producto_id'])
+    carProd_id = int(request.form['carProd_id'])
+
+    producto = Producto.query.get(producto_id)
+    carProd = CarProd.query.get(carProd_id)
+
+    if producto and carProd:
+        producto.stock += carProd.cantidad
+        db.session.delete(carProd)
+        db.session.commit()
+
     return redirect(url_for('carrito'))
 
 @app.route('/checkout')
-#No creo que este completa, solo tiene la parte de crear otro carrito
 def checkout():
-    user_id=session.get('user_id')
-    newCarrito=Carrito(idUser=user_id)
+    user_id = session.get('user_id')
+    newCarrito = Carrito(idUser=user_id)
     db.session.add(newCarrito)
     db.session.commit()
-    carrito=Carrito.query.order_by(Carrito.id.desc()).first()   #Obtener id de ultimo carrito creado #SELECT * FROM Carrito ORDER BY id DESC LIMIT 1
     return render_template('checkout.html')
-
 
 #--------------#
 #-----Main-----#
@@ -292,5 +302,4 @@ def checkout():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-
     app.run(debug=True)
