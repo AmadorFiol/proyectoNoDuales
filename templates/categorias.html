@@ -9,45 +9,53 @@
 </head>
 <body>
     <nav>
-        <ul class="menu">
+        <div class="navbar-container">
+        <div class="navbar-left">
             <img src="{{ url_for('static', filename='img/white/rotulo.png') }}" width="250" height="125">
+        </div>
+
+        <ul class="menu">
             <li><a href="{{ url_for('index') }}">Inicio</a></li>
             <li>
-                <a href="{{ url_for('index') }}">Productos ▼</a>
-                <ul class="submenu">
-                  {% for categoria in categorias %}
-                    <li><a href="{{ url_for('categorias', categoria_id=categoria.id) }}">{{ categoria.nombre }}</a></li>
-                  {% endfor %}
-                </ul>
+            <a href="{{ url_for('index') }}">Productos ▼</a>
+            <ul class="submenu">
+                {% for categoria in categorias %}
+                <li><a href="{{ url_for('categorias', categoria_id=categoria.id) }}">{{ categoria.nombre }}</a></li>
+                {% endfor %}
+            </ul>
             </li>
+        </ul>
+
+        <div class="navbar-right">
             <div class="search-container">
-                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M10 2a8 8 0 015.29 13.71l4.48 4.48-1.42 1.42-4.48-4.48A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z" />
-                </svg>
-                <input type="text" placeholder="Buscar...">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10 2a8 8 0 015.29 13.71l4.48 4.48-1.42 1.42-4.48-4.48A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z" />
+            </svg>
+            <input type="text" placeholder="Buscar...">
             </div>
             <div class="navbar-icons">
-                <form action="{{ url_for('carrito') }}">
-                    <button type="submit" class="icon-button">
-                        <img src="{{ url_for('static', filename='img/white/carrito.png') }}" width="50%" height="50%">
-                    </button>
-                </form>
+            <form action="{{ url_for('carrito') }}">
+                <button type="submit" class="icon-button">
+                <img src="{{ url_for('static', filename='img/white/carrito.png') }}" width="50%" height="50%">
+                </button>
+            </form>
 
-                {% if user_id %}
-                <form action="{{ url_for('user', user_id=user_id) }}">
-                    <button type="submit" class="icon-button">
-                        <img src="{{ url_for('static', filename='img/white/userIcon.png') }}" width="50%" height="50%">
-                    </button>
-                </form>
-                {% else %}
-                <form action="{{ url_for('signup') }}">
-                    <button type="submit" class="icon-button">
-                        <img src="{{ url_for('static', filename='img/white/userIcon.png') }}" width="50%" height="50%">
-                    </button>
-                </form>
-                {% endif %}
+            {% if user_id %}
+            <form action="{{ url_for('user', user_id=user_id) }}">
+                <button type="submit" class="icon-button">
+                <img src="{{ url_for('static', filename='img/white/userIcon.png') }}" width="50%" height="50%">
+                </button>
+            </form>
+            {% else %}
+            <form action="{{ url_for('signup') }}">
+                <button type="submit" class="icon-button">
+                <img src="{{ url_for('static', filename='img/white/userIcon.png') }}" width="50%" height="50%">
+                </button>
+            </form>
+            {% endif %}
             </div>
-        </ul>    
+        </div>
+        </div>
     </nav>
 
     <div class="main">
@@ -56,9 +64,9 @@
                 <div class="product-card">
                     <a href="{{ url_for('productos', product_id=producto.id) }}">
                         <div>
-                        <img src="../{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}">
-                        <h2>{{ producto.nombre }}</h2>
-                        <p class="price">{{ producto.precio }}€</p>
+                            <img src="../{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}">
+                            <h2>{{ producto.nombre }}</h2>
+                            <p class="price">{{ producto.precio }}€</p>
                         </div>
                     </a>
                     <form action="{{ url_for('add_to_cart',cantidad=1) }}" method="post">
@@ -69,4 +77,3 @@
         {% endfor %}
     </div>
 </body>
-</html>

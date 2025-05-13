@@ -17,11 +17,28 @@ nav {
     box-shadow: 0 4px 10px navy;
 }
 
-.menu {
-    list-style: none;
+.navbar-container {
     display: flex;
-    justify-content: center;
-    gap: 30px;
+    align-items: center;
+    justify-content: space-evenly;
+    max-width: 16000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.menu {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .menu li {
