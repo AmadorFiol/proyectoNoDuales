@@ -4,62 +4,109 @@ body {
   background-color: navy;
 }
 
+button {
+  background-color: navy;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 1.1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: royalblue;
+}
+
 header {
   background-color: navy;
   color: white;
   padding: 1rem 2rem;
   text-align: center;
 }
-  
+
 h1 {
   margin: 0;
 }
 
 .main {
   display: flex;
-  gap: 1.5rem;
+  justify-content: center;
   padding: 2rem;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  padding: 1rem;
-  text-align: center;
-  transition: transform 0.2s ease;
-}
-
-button {
   background-color: navy;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-  
-button:hover {
-  background-color: royalblue;
 }
 
-.info {
+/* Tarjeta del producto */
+.product-card {
   display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 1600px;
+  width: 98%;
 }
 
-.price {
-  color: navy;
-  font-weight: bold;
-  margin: 0.5rem 0;
+/* Imagen del producto */
+.product-image {
+  flex: 1.2;
 }
 
-.product-card img {
-  width: 50%;
-  height: auto;
-  border-radius: 8px;
-}
-
-.product-card img:hover {
+.product-image img {
   width: 100%;
   height: auto;
   border-radius: 8px;
+}
+
+/* Descripción del producto */
+.product-description {
+  flex: 2.3;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 1.2rem;
+}
+
+/* Título y precio alineados verticalmente */
+.product-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.product-header h2 {
+  margin: 0;
+  font-size: 2.2rem;
+}
+
+.price {
+  margin: 0.2rem 0 0;
+  color: navy;
+  font-weight: bold;
+  font-size: 1.6rem;
+}
+
+/* Sección de compra */
+.compra {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.compra p {
+  margin: 0.5rem 0;
+}
+
+.compra input[type="number"] {
+  width: 60px;
+  padding: 0.2rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
 }

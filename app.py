@@ -111,7 +111,7 @@ def signin():
             return 'Usuario no encontrado o contraseña incorrecta', 404
     return render_template('signin.html')
 
-@app.route('/logout')
+@app.route('/logout', methods=["GET", "POST"])
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('index'))
