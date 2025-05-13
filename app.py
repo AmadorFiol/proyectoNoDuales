@@ -187,8 +187,9 @@ def updatestock():
 @app.route('/categorias/<int:categoria_id>')
 def categorias(categoria_id):
     productos=Producto.query.all()
+    categorias=Categoria.query.all()
     categoria=Categoria.query.get(categoria_id)
-    return render_template("categorias.html",categoria=categoria, productos=productos)
+    return render_template("categorias.html",categoria=categoria, productos=productos,categorias=categorias)
 
 @app.route('/addcategoria', methods=["GET", "POST"])
 def addcategoria():

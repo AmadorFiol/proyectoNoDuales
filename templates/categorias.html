@@ -4,12 +4,52 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{categoria.nombre}} | Electromarkt</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/navbar.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
 </head>
 <body>
-    <form id="flecha" action="{{ url_for('index')}}">
-        <button type="submit"><img src="{{ url_for('static', filename='img/white/flecha.png') }}" height="50px"></button>
-    </form>
+    <nav>
+        <ul class="menu">
+            <img src="{{ url_for('static', filename='img/white/rotulo.png') }}" width="250" height="125">
+            <li><a href="{{ url_for('index') }}">Inicio</a></li>
+            <li>
+                <a href="{{ url_for('index') }}">Productos ▼</a>
+                <ul class="submenu">
+                  {% for categoria in categorias %}
+                    <li><a href="{{ url_for('categorias', categoria_id=categoria.id) }}">{{ categoria.nombre }}</a></li>
+                  {% endfor %}
+                </ul>
+            </li>
+            <div class="search-container">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 2a8 8 0 015.29 13.71l4.48 4.48-1.42 1.42-4.48-4.48A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z" />
+                </svg>
+                <input type="text" placeholder="Buscar...">
+            </div>
+            <div class="navbar-icons">
+                <form action="{{ url_for('carrito') }}">
+                    <button type="submit" class="icon-button">
+                        <img src="{{ url_for('static', filename='img/white/carrito.png') }}" width="50%" height="50%">
+                    </button>
+                </form>
+
+                {% if user_id %}
+                <form action="{{ url_for('user', user_id=user_id) }}">
+                    <button type="submit" class="icon-button">
+                        <img src="{{ url_for('static', filename='img/white/userIcon.png') }}" width="50%" height="50%">
+                    </button>
+                </form>
+                {% else %}
+                <form action="{{ url_for('signup') }}">
+                    <button type="submit" class="icon-button">
+                        <img src="{{ url_for('static', filename='img/white/userIcon.png') }}" width="50%" height="50%">
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </ul>    
+    </nav>
+
     <div class="main">
         {% for producto in productos %}
             {% if producto.categoria == categoria.id %}

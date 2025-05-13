@@ -96,4 +96,5 @@ body {
 .product-card a:hover {
     background-color: #e6f0ff;
     border-radius: 8px;
+    transform: translateY(-5px);
 }

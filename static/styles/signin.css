@@ -2,9 +2,29 @@ body {
     background-color: navy;
 }
 
-#formulario {
+button {
+    background-color: navy;
+    color: white;
+    border: none;
+}
+
+button:hover {
+    background-color: royalblue;
+}
+
+#flecha button:hover {
+    background-color: navy;
+}
+
+.main {
     background-color: white;
-    width: fit-content;
-    justify-content: center;
-    align-items: center;
+    width: 25%;
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    flex-wrap: wrap;
+    text-align: center;
+    justify-content: space-around;
 }

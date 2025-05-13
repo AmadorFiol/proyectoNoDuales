@@ -1,38 +1,45 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f2f5;
-  }
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: navy;
+}
+
+button {
+  background-color: navy;
+  color: white;
+  border: none;
+}
+
+button:hover {
+  background-color: royalblue;
+}
+
+#flecha button:hover {
+  background-color: navy;
+}
+
+.usuario-header {
+  background-color: white;
+  color: navy;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+}
   
-  .usuario-header {
-    background-color: #ffffff;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #ddd;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
-  }
+.usuario-nombre {
+  font-size: 16px;
+  color: #333;
+  margin: 0;
+}
   
-  .usuario-nombre {
-    font-size: 16px;
-    color: #333;
-    margin: 0;
-  }
-  
-  .boton-sesion {
-    background-color: #007bff;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  
-  .boton-sesion:hover {
-    background-color: #0056b3;
-  }
-  
+.boton-sesion {
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+} 

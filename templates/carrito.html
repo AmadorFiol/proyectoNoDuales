@@ -24,7 +24,6 @@
                                     <h2>{{ producto.nombre }}</h2>
                                     <p>{{ producto.descripcion }}</p>
                                     <span class="price">{{ producto.precio }} € * {{ carProd.cantidad }} unidad(es)</span>
-
                                     <div class="quantity-control">
                                         <form action="{{ url_for('actualizarcantidad') }}" method="POST">
                                             <input type="hidden" name="producto_id" value="{{ producto.id }}">
@@ -32,13 +31,12 @@
                                             <input type="number" name="diferencia" value="{{ carProd.cantidad }}" min="1" max="{{ producto.stock + carProd.cantidad }}">
                                             <button type="submit">Actualizar</button>
                                         </form>
+                                        <form action="{{ url_for('remove_from_cart') }}" method="POST">
+                                            <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                                            <input type="hidden" name="carProd_id" value="{{ carProd.id }}">
+                                            <button class="remove-btn" type="submit">Eliminar</button>
+                                        </form>
                                     </div>
-
-                                    <form action="{{ url_for('remove_from_cart') }}" method="POST">
-                                        <input type="hidden" name="producto_id" value="{{ producto.id }}">
-                                        <input type="hidden" name="carProd_id" value="{{ carProd.id }}">
-                                        <button class="remove-btn" type="submit">Eliminar</button>
-                                    </form>
                                 </div>
                             </div>
                         {% endif %}
